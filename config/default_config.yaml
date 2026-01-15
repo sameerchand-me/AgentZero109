@@ -1,0 +1,84 @@
+# AgentZero109 Configuration
+
+# General Settings
+general:
+  version: "1.0.0"
+  user_agent: "AgentZero109/1.0 (Security Research)"
+  timeout: 10  # seconds
+  max_redirects: 3
+
+# Rate Limiting
+rate_limiting:
+  default_rate: 10  # requests per second
+  burst_size: 20
+  backoff_multiplier: 2.0
+  max_backoff: 60
+
+# Agent Settings
+agents:
+  recon:
+    enabled: true
+    deep_scan: false
+    wordlist_size: "medium"  # small, medium, large
+  
+  logic:
+    enabled: true
+    max_workflow_depth: 5
+    test_step_permutations: true
+  
+  exploit:
+    enabled: true
+    validation_attempts: 3
+    use_canary_payloads: true
+  
+  chain:
+    enabled: true
+    max_chain_length: 4
+    min_chain_severity: "medium"
+  
+  report:
+    enabled: true
+    format: "markdown"  # markdown, json, html
+    include_curl: true
+
+# Scoring Thresholds
+scoring:
+  min_priority_score: 7.0
+  min_confidence: "medium"  # low, medium, high
+  ignore_tier_4: true
+
+# Safety Controls
+safety:
+  human_review_mode: true
+  kill_switch_enabled: true
+  audit_logging: true
+  dry_run: false
+
+# Output Settings
+output:
+  reports_dir: "reports"
+  audit_logs_dir: "audit_logs"
+  findings_dir: "findings"
+  save_json: true
+  save_markdown: true
+
+# Notification Settings (optional)
+notifications:
+  enabled: false
+  slack_webhook: ""
+  email: ""
+
+# Cloud Provider Detection
+cloud:
+  detect_aws: true
+  detect_azure: true
+  detect_gcp: true
+  test_metadata_endpoints: true
+
+# Advanced Settings
+advanced:
+  parallel_requests: 5
+  session_timeout: 3600
+  cache_responses: true
+  fingerprint_responses: true
+  detect_waf: true

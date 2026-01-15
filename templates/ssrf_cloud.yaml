@@ -1,0 +1,59 @@
+name: Cloud SSRF Detection
+description: Detects SSRF vulnerabilities targeting cloud metadata services
+category: Tier2_SSRF
+severity: critical
+priority: 9
+
+cloud_metadata_urls:
+  aws:
+    - http://169.254.169.254/latest/meta-data/
+    - http://169.254.169.254/latest/meta-data/iam/security-credentials/
+    - http://169.254.169.254/latest/dynamic/instance-identity/
+  
+  azure:
+    - http://169.254.169.254/metadata/instance?api-version=2021-02-01
+    - http://169.254.169.254/metadata/identity/oauth2/token
+  
+  gcp:
+    - http://metadata.google.internal/computeMetadata/v1/
+    - http://169.254.169.254/computeMetadata/v1/
+    - http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+
+injection_parameters:
+  - url
+  - uri
+  - path
+  - file
+  - document
+  - page
+  - src
+  - source
+  - target
+  - redirect
+  - callback
+
+test_strategy:
+  1. Identify URL-accepting parameters
+  2. Try cloud metadata URLs
+  3. Look for out-of-band confirmation
+  4. Check response for metadata leakage
+  5. Attempt credential extraction
+
+validation:
+  - Set up callback server
+  - Inject metadata URL
+  - Monitor for callback
+  - Check for credential exposure
+
+high_impact_targets:
+  - IAM credentials
+  - Instance identity documents
+  - OAuth tokens
+  - Service account keys
+  - Environment variables
+
+indicators:
+  - Metadata in response
+  - Credential strings visible
+  - Out-of-band callback received
+  - Long response times (internal request)

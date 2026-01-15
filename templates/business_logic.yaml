@@ -1,0 +1,81 @@
+name: Business Logic Vulnerabilities
+description: Detects business logic and workflow bypass issues
+category: Tier1_Business_Logic
+severity: high
+priority: 10
+
+vulnerability_classes:
+  workflow_bypass:
+    description: Skip required steps in multi-step processes
+    test_approach:
+      - Map complete workflow
+      - Try skipping intermediate steps
+      - Attempt direct access to final step
+      - Test step reordering
+    
+    common_targets:
+      - Checkout processes
+      - Registration flows
+      - Payment workflows
+      - Account verification
+      - Multi-factor authentication
+  
+  parameter_manipulation:
+    description: Manipulate prices, quantities, or business parameters
+    test_approach:
+      - Intercept workflow parameters
+      - Change price to $0.01
+      - Set quantity to 999999
+      - Modify discount to 100%
+      - Change total amount
+    
+    common_parameters:
+      - price
+      - total
+      - amount
+      - quantity
+      - discount
+      - coupon_value
+  
+  replay_attacks:
+    description: Replay actions for duplicate benefits
+    test_approach:
+      - Complete action once
+      - Replay same request
+      - Check if benefit duplicates
+      - Test with different timing
+    
+    common_targets:
+      - Credit application
+      - Coupon redemption
+      - Reward claims
+      - Refund requests
+  
+  rate_limit_bypass:
+    description: Bypass rate limiting for enumeration/abuse
+    test_approach:
+      - Identify rate-limited endpoints
+      - Try IP rotation
+      - Use different headers
+      - Test timing variations
+    
+    bypass_techniques:
+      - X-Forwarded-For manipulation
+      - User-Agent rotation
+      - Session rotation
+      - Distributed requests
+
+test_strategy:
+  1. Map complete business workflows
+  2. Identify trust assumptions
+  3. Test parameter validation
+  4. Attempt step bypass
+  5. Test for replay vulnerabilities
+  6. Validate state management
+
+indicators:
+  - Steps can be skipped
+  - Parameters accepted without validation
+  - Actions can be replayed
+  - State not properly tracked
+  - Financial manipulation possible

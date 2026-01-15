@@ -1,0 +1,41 @@
+name: IDOR Detection
+description: Detects Insecure Direct Object References (IDOR)
+category: Tier1_Authorization
+severity: high
+priority: 10
+
+patterns:
+  # Common IDOR patterns in URLs
+  - /api/user/{id}
+  - /api/profile/{id}
+  - /api/account/{id}
+  - /api/order/{id}
+  - /api/document/{id}
+  - /api/file/{id}
+  
+  # Parameter names that often indicate IDOR
+  id_parameters:
+    - user_id
+    - account_id
+    - order_id
+    - document_id
+    - file_id
+    - profile_id
+    - customer_id
+
+test_strategy:
+  1. Enumerate resource IDs for user1
+  2. Attempt to access user1 resources as user2
+  3. Compare responses
+  4. Validate unauthorized access
+
+validation:
+  - Create user1 and user2
+  - User1 creates resource, note ID
+  - User2 attempts to access user1's resource ID
+  - Success = IDOR confirmed
+
+indicators:
+  - status_code: 200 (when should be 403)
+  - data_leakage: true
+  - cross_user_access: true

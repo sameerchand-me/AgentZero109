@@ -1,0 +1,87 @@
+# Example Bug Bounty Program Policy Configuration
+
+program_name: "Example HackerOne Program"
+
+scope:
+  # In-scope domains
+  in_scope_domains:
+    - example.com
+    - api.example.com
+    - app.example.com
+  
+  # Specific in-scope URLs
+  in_scope_urls:
+    - https://example.com/*
+    - https://api.example.com/v1/*
+    - https://app.example.com/*
+  
+  # Out of scope
+  out_of_scope:
+    - https://example.com/blog/*
+    - https://status.example.com/*
+    - "*.staging.example.com"
+  
+  # Allowed vulnerability types (empty = all allowed)
+  allowed_types:
+    - idor
+    - privilege_escalation
+    - sql_injection
+    - ssrf
+    - business_logic
+    - account_takeover
+  
+  # Explicitly excluded types
+  excluded_types:
+    - self_xss
+    - clickjacking
+    - missing_security_headers
+    - autocomplete_enabled
+    - open_redirect_low_impact
+  
+  max_severity: "critical"
+  safe_harbor: true
+
+rules:
+  no_dos: true
+  no_social_engineering: true
+  no_physical_attacks: true
+  requires_authentication: false
+  
+  # Rate limit (requests per minute)
+  rate_limit: 100
+  
+  # Testing hours (UTC)
+  allowed_testing_hours: "anytime"
+  
+  # Notification before testing
+  notification_required: false
+  
+  custom_rules:
+    - "Do not test on production payment endpoints"
+    - "Use test accounts only"
+    - "Do not exfiltrate real user data"
+
+payout_info:
+  min_payout: 100
+  max_payout: 15000
+  avg_payout: 2500
+  
+  # Historical accepted vulnerability counts
+  accepted_vulnerabilities:
+    idor: 25
+    privilege_escalation: 15
+    business_logic: 20
+    sql_injection: 10
+    ssrf: 12
+    account_takeover: 18
+    xss: 8
+  
+  # Patterns that are commonly rejected
+  rejected_patterns:
+    - "basic xss in markdown"
+    - "self xss"
+    - "clickjacking without impact"
+    - "verbose error messages"
+  
+  # Historical duplicate rate
+  duplicate_rate: 0.35

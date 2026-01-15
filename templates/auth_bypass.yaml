@@ -1,0 +1,46 @@
+name: Authentication Bypass
+description: Detects authentication and authorization bypass vulnerabilities
+category: Tier1_Authorization
+severity: critical
+priority: 10
+
+bypass_techniques:
+  path_manipulation:
+    - /admin -> /aDmIn (case sensitivity)
+    - /admin -> /admin/ (trailing slash)
+    - /admin -> //admin (double slash)
+    - /admin -> /admin.. (path traversal)
+  
+  parameter_manipulation:
+    - Add admin=true
+    - Add role=admin
+    - Change user_id
+    - Manipulate JWT claims
+  
+  header_manipulation:
+    - X-Original-URL
+    - X-Rewrite-URL
+    - X-Forwarded-For: 127.0.0.1
+    - X-User-Role: admin
+  
+  method_tampering:
+    - GET /admin (403) -> POST /admin (200?)
+    - Try all HTTP methods
+  
+  token_manipulation:
+    - Remove authentication header
+    - Use expired token
+    - Modify JWT payload
+    - Change user_id in token
+
+test_strategy:
+  1. Identify protected endpoints (401/403)
+  2. Try bypass techniques systematically
+  3. Monitor for successful access
+  4. Validate authorization checks
+
+indicators:
+  - Protected endpoint becomes accessible
+  - Admin functionality available
+  - Role elevation successful
+  - Authorization check missing
